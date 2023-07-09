@@ -21,7 +21,8 @@ const db = mySql.createPool({
 app.use(express.json());
 
 app.use(cors({
-    origin: 'https://raletale.ng', // Replace with your allowed origin
+
+    origin: 'http://localhost:3000', // Replace with your allowed origin
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify the allowed methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Specify the allowed headers
     credentials: true, // Allow sending cookies and HTTP authentication
@@ -152,9 +153,13 @@ app.post("/api/logout",(req,res)=>{
 
 // Upload Property
 app.post("/api/uploadProperty",(req,res)=>{
-    const {sessionEmail, availableFor, propertyPurpose, propertyType, noOfBedroom, suites, story, landType, landTypeInput, noOfFuelPumps, warehouseInput, hotelBlahBlah, state, LGA, nearestBusStop, streetName, buildingNumber, price, budgetFrom, budgetTo, inspection, timeFrom, timeTo } = req.body;
+    const {sessionEmail, availableFor, propertyPurpose, propertyType, noOfBedroom, suites, story, landType, landTypeInput, noOfFuelPumps, warehouseInput, hotelBlahBlah, state, LGA, nearestBusStop, streetName, buildingNumber, price, budgetFrom, budgetTo, inspection, timeFrom, timeTo, checkboxValues,gardenAllowedRadioBtn} = req.body;
+    const petArrays = JSON.stringify(checkboxValues)
+    console.log(gardenAllowedRadioBtn);
     const sqlSelect =  "SELECT * FROM props WHERE AvailableFor = ? AND property_purpose = ? AND property_type = ?";
-    const sqlInsert = "INSERT INTO props (Email,AvailableFor,property_purpose,property_type,no_of_bedroom,no_of_suites,no_of_story,land_type,no_of_plotAcresHectres,no_of_fuelPumps,no_of_warehouse_in_square_meter,no_of_hotelrooms,state,LGA,nearestBusStop,streetName,buildingNumber,price,budgetFrom,budgetTo,inspection,timeFrom,timeTo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+
+    const sqlInsert = "INSERT INTO props (Email,AvailableFor,property_purpose,property_type,no_of_bedroom,no_of_suites,no_of_story,land_type,no_of_plotAcresHectres,no_of_fuelPumps,no_of_warehouse_in_square_meter,no_of_hotelrooms,state,LGA,nearestBusStop,streetName,buildingNumber,price,PetsArray,GardenAllowed,budgetFrom,budgetTo,inspection,timeFrom,timeTo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+
     db.query(sqlSelect,[availableFor,propertyPurpose,propertyType,noOfBedroom,suites],(error,result)=>{
         if (error) {
             console.log("Database", error);
@@ -165,10 +170,9 @@ app.post("/api/uploadProperty",(req,res)=>{
             } else {
                 console.log("Property not Found But submitted");
                 res.status(404).json({status:404,message:"Your property has been submmited successfully"})
-                db.query(sqlInsert,[sessionEmail,availableFor,propertyPurpose,propertyType,noOfBedroom,suites,story,landType,landTypeInput, noOfFuelPumps, warehouseInput, hotelBlahBlah,state,LGA,nearestBusStop,streetName,buildingNumber,price,budgetFrom,budgetTo,inspection,timeFrom,timeTo],(error,result)=>{
+                db.query(sqlInsert,[sessionEmail,availableFor,propertyPurpose,propertyType,noOfBedroom,suites,story,landType,landTypeInput, noOfFuelPumps, warehouseInput, hotelBlahBlah,state,LGA,nearestBusStop,streetName,buildingNumber,price,petArrays,gardenAllowedRadioBtn,budgetFrom,budgetTo,inspection,timeFrom,timeTo],(error,result)=>{
                     console.log(error);
                 })
-
             }
         }
     }) 
