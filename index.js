@@ -7,8 +7,9 @@ const cors = require("cors");
 const mySql = require("mysql2");
 const { json } = require("body-parser");
 const cookieParser = require("cookie-parser")
-const { createProxyMiddleware } = require('http-proxy-middleware');
+// const { createProxyMiddleware } = require('http-proxy-middleware');
 const session = require("express-session");
+// const nodemailer = require('nodemailer');
 
 const db = mySql.createPool({
     user: process.env.USERT,
@@ -21,18 +22,18 @@ const db = mySql.createPool({
 app.use(express.json());
 
 app.use(cors({
+    origin: [process.env.LOCAL_CLIENT_APP, process.env.REMOTE_CLIENT_APP],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  }));
 
-    origin: 'http://localhost:3000', // Replace with your allowed origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify the allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Specify the allowed headers
-    credentials: true, // Allow sending cookies and HTTP authentication
-}));
 
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(session({
-    key: "userId",
+    key: "userIProps",
     secret: "subscribe",
     resave: false,
     saveUninitialized: false,
@@ -49,6 +50,41 @@ app.get("/api/getUsers", (req, res) => {
     })
 })
 
+// const transporter = nodemailer.createTransport({
+//     host: 'smtp.elasticemail.com',
+//   port: 2525,
+//   secure: false,
+//   auth: {
+//     user: 'olatunbossemma17@gmail.com',
+//     pass: 'AB94C0DE18FDF38D87FEE95E7AF8920F6018',
+//   },
+  
+//   });
+
+
+//   app.post('/send-email', (req, res) => {
+//     const { to, subject, text } = req.body;
+  
+//     const mailOptions = {
+//       from: 'olatunbossemma17@gmail.com',
+//       to,
+//       subject,
+//       text,
+//     };
+  
+//     transporter.sendMail(mailOptions, (error, info) => {
+//       if (error) {
+//         console.error('Error sending email:', error);
+//         res.status(500).send('Error sending email');
+//       } else {
+//         console.log('Email sent:', info.response);
+//         res.status(200).send('Email sent');
+//       }
+//     });
+//   });
+
+
+
 
 // Register Post
 app.post("/api/registerPost", (req, res) => {
@@ -63,12 +99,36 @@ app.post("/api/registerPost", (req, res) => {
                 res.status(200).json({ status: 200, message: "User Already exist" })
             } else {
                 res.status(404).json({ status: 404, message: "Success" })
-                db.query(sqlInsert, [fullname, email, phone, location, pwd], (error, result) => {
+                // db.query(sqlInsert, [fullname, email, phone, location, pwd], (error, result) => {
+                //     if (error) {
+                //         console.log(error);
+                //     }
+                // })
+            }
+        }
+    })
+
+})
+
+app.post("/api/verifyUserPost", (req, res) => {
+    const { Name, Email, Phone, Address, Password } = req.body;
+    console.log(req.body);
+    const sqlSelect = "SELECT * FROM users WHERE Email  = ?";
+    const sqlInsert = "INSERT INTO users(fullname,Email,Telephone,Address,Password) value(?,?,?,?,?)";
+    db.query(sqlSelect, [Email], (error, result) => {
+        if (error) {
+            console.log("error From Database");
+        } else {
+            // if (result.length) {
+            //     res.status(200).json({ status: 200, message: "User Already exist" })
+            // } else {
+                res.status(404).json({ status: 404, message: "User Registered" })
+                db.query(sqlInsert, [Name, Email, Phone, Address, Password], (error, result) => {
                     if (error) {
                         console.log(error);
                     }
                 })
-            }
+            // }
         }
     })
 
@@ -104,10 +164,8 @@ app.post("/api/agentRegister",(req,res)=>{
 
 // Session storing get
 app.get("/api/loginPost", (req, res) => {
-    // req.session.user ="hello"
-    // res.header("Access-Control-Allow-Origin", "https://api.raletale.ng");
     if (req.session.user) {
-        res.send({ loggedIn: true, user: req.session.user, userd: req.session.userd })
+        res.send({ loggedIn: true, user: req.session.user, userProperty: req.session.userd })
     } else {
         res.send({ loggedIn: false, })
     }
@@ -116,7 +174,7 @@ app.get("/api/loginPost", (req, res) => {
 
 // Login Post
 app.post("/api/loginPost", (req, res) => {
-    // res.header("Access-Control-Allow-Origin", "https://api.raletale.ng");
+
     const { email, pwd } = req.body;
     const sqlSelect = "SELECT * FROM users WHERE Email = ? AND Password = ?";
     db.query(sqlSelect, [email, pwd], (error, result) => {
@@ -153,12 +211,12 @@ app.post("/api/logout",(req,res)=>{
 
 // Upload Property
 app.post("/api/uploadProperty",(req,res)=>{
-    const {sessionEmail, availableFor, propertyPurpose, propertyType, noOfBedroom, suites, story, landType, landTypeInput, noOfFuelPumps, warehouseInput, hotelBlahBlah, state, LGA, nearestBusStop, streetName, buildingNumber, price, budgetFrom, budgetTo, inspection, timeFrom, timeTo, checkboxValues,gardenAllowedRadioBtn} = req.body;
+    const {sessionEmail, availableFor, propertyPurpose, propertyType, noOfBedroom, suites, story, landType, landTypeInput, noOfFuelPumps, warehouseInput, hotelBlahBlah, state, LGA, nearestBusStop, streetName, buildingNumber, price,inspection, timeFrom, timeTo, checkboxValues,gardenAllowedRadioBtn} = req.body;
     const petArrays = JSON.stringify(checkboxValues)
     console.log(gardenAllowedRadioBtn);
     const sqlSelect =  "SELECT * FROM props WHERE AvailableFor = ? AND property_purpose = ? AND property_type = ?";
 
-    const sqlInsert = "INSERT INTO props (Email,AvailableFor,property_purpose,property_type,no_of_bedroom,no_of_suites,no_of_story,land_type,no_of_plotAcresHectres,no_of_fuelPumps,no_of_warehouse_in_square_meter,no_of_hotelrooms,state,LGA,nearestBusStop,streetName,buildingNumber,price,PetsArray,GardenAllowed,budgetFrom,budgetTo,inspection,timeFrom,timeTo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    const sqlInsert = "INSERT INTO props (Email,AvailableFor,property_purpose,property_type,no_of_bedroom,no_of_suites,no_of_story,land_type,no_of_plotAcresHectres,no_of_fuelPumps,no_of_warehouse_in_square_meter,no_of_hotelrooms,state,LGA,nearestBusStop,streetName,buildingNumber,price,PetsArray,GardenAllowed,inspection,timeFrom,timeTo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
     db.query(sqlSelect,[availableFor,propertyPurpose,propertyType,noOfBedroom,suites],(error,result)=>{
         if (error) {
@@ -170,13 +228,15 @@ app.post("/api/uploadProperty",(req,res)=>{
             } else {
                 console.log("Property not Found But submitted");
                 res.status(404).json({status:404,message:"Your property has been submmited successfully"})
-                db.query(sqlInsert,[sessionEmail,availableFor,propertyPurpose,propertyType,noOfBedroom,suites,story,landType,landTypeInput, noOfFuelPumps, warehouseInput, hotelBlahBlah,state,LGA,nearestBusStop,streetName,buildingNumber,price,petArrays,gardenAllowedRadioBtn,budgetFrom,budgetTo,inspection,timeFrom,timeTo],(error,result)=>{
+                db.query(sqlInsert,[sessionEmail,availableFor,propertyPurpose,propertyType,noOfBedroom,suites,story,landType,landTypeInput, noOfFuelPumps, warehouseInput, hotelBlahBlah,state,LGA,nearestBusStop,streetName,buildingNumber,price,petArrays,gardenAllowedRadioBtn,inspection,timeFrom,timeTo],(error,result)=>{
                     console.log(error);
                 })
             }
         }
     }) 
 })
+
+// Requesting For property
 
 app.post("/api/searchingForProperty",(req,res)=>{
     const { availableFor, propertyPurpose, propertyType, noOfBedroom, suites, story, landType, landTypeInput, noOfFuelPumps, warehouseInput, hotelBlahBlah, state, LGA, nearestBusStop, budgetFrom, budgetTo, inspection, timeFrom, timeTo, searchNameContactInfo,searchPhoneCallContactInfo,searchWahtsappLineContactInfo,searchValidEmailContactInfo,searchContactInfoDropdown} = req.body;
