@@ -70,9 +70,8 @@ app.post("/api/registerPost", (req, res) => {
 })
 
 app.post("/api/verifyUserPost", (req, res) => {
-    const { token, encryptedObject,deleteToken} = req.body;
+    const { token, encryptedObject} = req.body;
     console.log("This is the", token);
-    let deletingToken = deleteToken;
     const sqlSelect = "SELECT * FROM userVerification";
     const sqlInsert = "INSERT INTO userVerification(token,encdata) value(?,?)";
     const sqlDelete = "DELETE FROM userVerification WHERE token = ?";
@@ -87,8 +86,6 @@ app.post("/api/verifyUserPost", (req, res) => {
                 } else {
                     
                     setTimeout(() => {
-                        deletingToken = true
-                        console.log("deleteToken =", deletingToken);
                         db.query(sqlDelete,[token], (error, result) => {
                                     if (error) {
                                         console.log(error);
