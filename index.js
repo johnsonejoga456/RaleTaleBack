@@ -46,13 +46,19 @@ app.use(
   })
 );
 
-// app.use((req, res, next) => {
-//     res.setHeader('Access-Control-Allow-Origin','http://localhost:3001');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-//     res.setHeader('Access-Control-Allow-Credentials', true);
-//     next();
-//   });
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  next();
+});
 
 app.get("/api/getUsers", (req, res) => {
   const sqlSelect = "SELECT * FROM users";
@@ -349,9 +355,9 @@ app.get("/api/loginPost", (req, res) => {
   }
 });
 
-app.post("/api/fetchingProp", (req, res) => {
-  const { sessionEmail } = req.body;
-
+app.get("/api/fetchingProp/:email", (req, res) => {
+  // const { sessionEmail } = req.body;
+  console.log(req.params.email);
   const sqlSelect = `
         SELECT 
             *,
@@ -361,7 +367,7 @@ app.post("/api/fetchingProp", (req, res) => {
         ORDER BY Date DESC
     `;
 
-  db.query(sqlSelect, [sessionEmail], (error, result) => {
+  db.query(sqlSelect, [req.params.email], (error, result) => {
     if (error) {
       console.error(error);
       res.status(500).json({ status: 500, message: "Internal server error" });
@@ -385,9 +391,9 @@ app.post("/api/fetchingProp", (req, res) => {
 
 // Login Post
 app.post("/api/loginPost", (req, res) => {
-  const { email, pwd } = req.body;
+  const { email, password } = req.body;
   const sqlSelect = "SELECT * FROM users WHERE Email = ? AND Password = ?";
-  db.query(sqlSelect, [email, pwd], (error, result) => {
+  db.query(sqlSelect, [email, password], (error, result) => {
     if (error) {
       console.log("error from database", error);
     } else {
@@ -402,6 +408,7 @@ app.post("/api/loginPost", (req, res) => {
             status: 200,
             message: "User exist",
             fullName: fullUserName,
+            email,
             Email: result,
           });
         });
@@ -570,13 +577,48 @@ app.post("/api/searchingForProperty", (req, res) => {
 
   const sqlInsert =
     "INSERT INTO searchedProps (AvailableFor,property_purpose,property_type,no_of_bedroom,no_of_suites,no_of_story,land_type,no_of_plotAcresHectres,no_of_fuelPumps,no_of_warehouse_in_square_meter,no_of_hotelrooms,state,LGA,nearestBusStop,budgetFrom,budgetTo,inspection,timeFrom,timeTo,Name,PhoneCallLine,Email,WhatsappLine,HowShouldWeContactYou) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    res.status(200).json({ status: 200, message: "Submitted successfully, our AI is working on your request we will get back to you soon" })
-  db.query(sqlInsert, [needPropertyFor, PropertyPurpose, PropertyDetails.propertyType, noOfBedroom, suites, story, landType, landTypeInput, noOfFuelPumps, wareHouseSize, noOfRooms, state, localGovernmentArea, neighbourhood, minPrice, maxPrice, inspectionDate, timeFrom, timeTo, requesterName, requesterCallLine, requesterEmail, requesterWhatsapp, preferredFeeback], (error, result) => {
+  res
+    .status(200)
+    .json({
+      status: 200,
+      message:
+        "Submitted successfully, our AI is working on your request we will get back to you soon",
+    });
+  db.query(
+    sqlInsert,
+    [
+      needPropertyFor,
+      PropertyPurpose,
+      PropertyDetails.propertyType,
+      noOfBedroom,
+      suites,
+      story,
+      landType,
+      landTypeInput,
+      noOfFuelPumps,
+      wareHouseSize,
+      noOfRooms,
+      state,
+      localGovernmentArea,
+      neighbourhood,
+      minPrice,
+      maxPrice,
+      inspectionDate,
+      timeFrom,
+      timeTo,
+      requesterName,
+      requesterCallLine,
+      requesterEmail,
+      requesterWhatsapp,
+      preferredFeeback,
+    ],
+    (error, result) => {
       if (error) {
         console.log("Database", error);
       }
-    console.log("thia",result);
-  })
+      console.log("thia", result);
+    }
+  );
 });
 
 app.listen(3002, () => {
