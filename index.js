@@ -373,6 +373,7 @@ app.get("/api/fetchingProp/:email", (req, res) => {
       res.status(500).json({ status: 500, message: "Internal server error" });
     } else {
       // Send the properties with formatted dates in the response
+      console.log(result);
       const formattedResult = result.map((item) => {
         return {
           ...item,
@@ -433,7 +434,7 @@ app.post("/api/logout", (req, res) => {
 // Upload Property
 app.post("/api/uploadProperty", (req, res) => {
   const {
-    sessionEmail,
+    email,
     availableFor,
     propertyPurpose,
     propertyType,
@@ -471,7 +472,7 @@ app.post("/api/uploadProperty", (req, res) => {
   db.query(
     sqlInsert,
     [
-      sessionEmail,
+      email,
       availableFor,
       propertyPurpose,
       propertyType,
