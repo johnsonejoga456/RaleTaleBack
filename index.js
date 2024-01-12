@@ -469,6 +469,8 @@ app.post("/api/uploadProperty", (req, res) => {
     status: 200,
     message: "Your property has been submmited successfully",
   });
+
+  cc
   db.query(
     sqlInsert,
     [
