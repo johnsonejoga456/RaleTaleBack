@@ -1,3 +1,52 @@
+# RALETALE
+
+> "A comprehensive platform for property listing, allowing property owners to post listings and searchers to find their ideal homes."
+
+---
+
+## Overview
+
+This project is a full-stack web application designed to streamline the real estate search and listing process. It enables property owners and agents to list properties, while potential tenants or buyers can explore and filter through listings based on various criteria, like location, price, and property type.
+
+### Key Features
+
+- **User Authentication & Authorization**  
+  Secure registration and login system, supporting both property searchers and property owners.
+
+- **User Profiles**  
+  Personalized user profiles for both property searchers and owners, with options to update profile information and profile pictures.
+
+- **Property Management**  
+  End-to-end property management, including listing, updating, viewing, and deleting properties, with options for custom search filters.
+
+### Tech Stack
+
+- **Frontend**: ReactJs/Next.js, Tailwind CSS
+- **Backend**:  Node.js, Express.js
+- **Database**: MongoDB
+- **Authentication**:  JWT, OAuth
+
+---
+
+## Installation
+
+Provide brief instructions for setting up the project locally.
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/projectname.git
+
+# Navigate to the project directory
+cd projectname
+
+# Install dependencies
+npm install
+
+# Run the application
+npm run dev
+```
+
+
 # API Documentation
 
 ## 1. User Authentication & Authorization
