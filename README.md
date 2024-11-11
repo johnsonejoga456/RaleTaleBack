@@ -34,10 +34,10 @@ Provide brief instructions for setting up the project locally.
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/projectname.git
+git clone https://github.com/Yemipidan-org/RaleTaleFrontend.git
 
 # Navigate to the project directory
-cd projectname
+cd RaleTaleFrontend
 
 # Install dependencies
 npm install
