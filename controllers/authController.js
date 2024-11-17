@@ -28,8 +28,6 @@ exports.register = async (req, res) => {
             });
     });
 };
-
-
 // Login user
 exports.login = async (req, res) => {
     const { email, password } = req.body;
@@ -71,3 +69,4 @@ exports.login = async (req, res) => {
         return res.status(500).json({ message: "An error occurred. Please try again later." });
     }
 };
+
