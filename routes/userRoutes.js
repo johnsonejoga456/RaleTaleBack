@@ -1,22 +1,15 @@
-
-const express = require('express');
-const { register, login, verifyToken } = require('../controllers/authController');
-
+const express = require("express");
 const router = express.Router();
 
-router.post('/register', register);
-router.post('/login', login);
-router.post("/verifyUserToken", verifyToken);
-
 const userController = require("../controllers/userController");
-const authMiddleware = require("..middleware/authMiddleware");
-
+const authMiddleware = require("../middleware/authMiddleware");
 
 // View user profile
-router.get("/profile, authMiddleware, userController.getProfile");
+router.get("/profile", authMiddleware, userController.getProfile);
 
-// Update user profile
-router.put("/profile", authMiddleware, userController.upateProfile);
+// ,"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiaWF0IjoxNzMyMjk2MDcyLCJleHAiOjE3MzIyOTk2NzJ9.9ho0E7JX4PljCDNdMIUfoRdHZx6dGPkPmY7mEaqaUbY"
 
+// Update user profile  
+router.put("/profile", authMiddleware, userController.updateProfile);
 
 module.exports = router;
