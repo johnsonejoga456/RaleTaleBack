@@ -28,9 +28,13 @@ exports.register = async (req, res) => {
             });
     });
 };
+
 // Login user
 exports.login = async (req, res) => {
     const { email, password } = req.body;
+    
+    console.log(email);
+    
 
     // Check if the email and password are provided
     if (!email || !password) {
@@ -64,6 +68,7 @@ exports.login = async (req, res) => {
             token,
             user: { id: user.id, full_name: user.full_name, email: user.email },
         });
+
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "An error occurred. Please try again later." });

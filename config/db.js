@@ -16,7 +16,7 @@ db.getConnection((err, connection) => {
     console.error("Database connection failed:", err.message);
   } else {
     console.log("Connected to the database successfully.");
-    
+
     // Create the users table if it doesn't exist
     const createUsersTable = `
       CREATE TABLE IF NOT EXISTS users (
