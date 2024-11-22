@@ -70,3 +70,9 @@ exports.login = async (req, res) => {
     }
 };
 
+// Logout User
+exports.logout = (req, res) => {
+    // Inform the client to clear the token 
+    res.status(200).json({ message: "Logged out successully" });
+}
+

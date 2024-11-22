@@ -1,6 +1,6 @@
 require("./config/env"); // Load environment variables
 const express = require("express");
-const corsConfig = require("./middlewear/consConfig");
+const corsConfig = require("./middleware/consConfig");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
