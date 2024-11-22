@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 
 const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes")
+const userRoutes = require("./routes/userRoutes");
 const propertyRoutes = require("./routes/propertyRoutes");
 const agentRoutes = require("./routes/agentRoutes");
 
@@ -27,7 +27,7 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
-app.use("api/users", userRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/properties", propertyRoutes);
 app.use("/api/agents", agentRoutes);
 
