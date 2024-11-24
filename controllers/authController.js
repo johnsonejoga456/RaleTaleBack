@@ -99,13 +99,3 @@ exports.login = async (req, res) => {
       .json({ message: "An error occurred. Please try again later." });
   }
 };
-
-
-
-// Verify Login JWT token
-exports.verifyToken = async (req, res) => {
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiaWF0IjoxNzMyMjg4MDgzLCJleHAiOjE3MzIyOTE2ODN9.K3FtOYnt4amKFLIJ6PPCnK1CBPg889bYbH3Foe1Mp8Y";
-
-  return res.status(200).json({ msg: verifyToken(token) });
-};
