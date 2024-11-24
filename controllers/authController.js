@@ -4,6 +4,7 @@ const db = require("../config/db");
 const verifyToken = require("./verifyToken");
 require("dotenv").config();
 
+// Register User
 exports.register = async (req, res) => {
   const {
     full_name,
@@ -98,6 +99,12 @@ exports.login = async (req, res) => {
       .status(500)
       .json({ message: "An error occurred. Please try again later." });
   }
+};
+
+// Logout User
+exports.logout = (req, res) => {
+  // For JWT-based logout, the client must handle token removal
+  res.status(200).json({ message: "Logged out successfully" });
 };
 
 
