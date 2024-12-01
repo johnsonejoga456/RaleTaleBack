@@ -1,7 +1,14 @@
 const db = require('../config/db');
 
 exports.uploadProperty = async (req, res) => {
-    const { title, description, price, location, property_type, bedrooms, bathrooms } = req.body;
+    const {
+        title,
+        description,
+        price,
+        location, 
+        property_type,
+        bedrooms,
+        bathrooms } = req.body;
     const userId = req.user.id; // Auth middleware sets req.user
 
     // Validate required fields
