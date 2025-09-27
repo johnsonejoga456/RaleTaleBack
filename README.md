@@ -30,22 +30,6 @@ This project is a full-stack web application designed to streamline the real est
 
 ## Installation
 
-Provide brief instructions for setting up the project locally.
-
-```bash
-# Clone the repository
-git clone https://github.com/Yemipidan-org/RaleTaleFrontend.git
-
-# Navigate to the project directory
-cd RaleTaleFrontend
-
-# Install dependencies
-npm install
-
-# Run the application
-npm run dev
-```
-
 
 # API Documentation
 
